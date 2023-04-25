@@ -1,0 +1,50 @@
+version: '3.1'
+
+services:
+  mysqldb:
+    container_name: solanches_db
+    image: mysql:5.7.36
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: dbsolanches
+      MYSQL_USER: user
+      MYSQL_PASSWORD: E8YP90MM
+    ports:
+      - "3306:3306"   
+    networks:
+      - solanches
+    volumes:
+      - solanches-data:/var/lib/mysql
+      - ./mysql-restorage:/docker-entrypoint-initdb.d
+
+  solanches-cash-closure:
+    container_name: solanches_cash_closure
+    image: solanchesdelivery/cash-closure-onpremise
+    restart: always
+    depends_on:
+      - mysqldb
+    ports:
+      - 8080:8080
+    networks:
+      - solanches
+
+  adminer:
+    container_name: solanches_adminer  
+    image: adminer
+    restart: always
+    depends_on:
+      - mysqldb
+    ports:
+      - 8081:8080
+    networks:
+      - solanches
+
+networks:
+  solanches:
+    name: solanches_network
+    driver: bridge
+
+volumes:
+  solanches-data:
