@@ -30,6 +30,17 @@ services:
     networks:
       - solanches
 
+  solanches-backend-adm-api:
+    container_name: solanches_backend_adm_api
+    image: solanchesdelivery/adm-backend-api
+    restart: always
+    depends_on:
+      - mysqldb
+    ports:
+      - 8082:8080
+    networks:
+      - solanches
+
   adminer:
     container_name: solanches_adminer  
     image: adminer
